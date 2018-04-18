@@ -83,7 +83,10 @@ class OneThermometer:
         # Default unit = Celcius
         temp = hexToDec(hex_line) / 1000
         
+        # FUTURE RELEASE!!! Utilize the self.unit_preference (object, string)
         if forc.upper() == 'F':
-            
-
+            temp = (temp * 1.8) + 32
         
+        # return (float)
+        return temp
+
