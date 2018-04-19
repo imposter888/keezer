@@ -9,12 +9,11 @@ class OneThermometer:
     self.dev_file = '/sys/bus/w1/devices/'
 
     def __init__ (self, device_location):
-        try:
-            os.is_device_location, 'r')
-        except FileNotFoundError():
+        if os.is_file(device_location) == False
             print('Device file not found!')
             raise AssertionError
-        
+        else:
+            self.dev_file = device_location
         self.unit_preference = None # 'C' (Celcius) or 'F' (Farinheight)
         self.current_temp = None
         self.cieling_temp = None
