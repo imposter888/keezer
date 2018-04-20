@@ -7,19 +7,26 @@ from os import popen
 class OneThermometer:
 
     self.dev_file = '/sys/bus/w1/devices/'
+    unit_preference = 'C' # 'C' (Celcius, default) or 'F' (Farinheight)
 
     def __init__ (self, device_location):
-        try:
-            os.is_device_location, 'r')
-        except FileNotFoundError():
-            print('Device file not found!')
-            raise AssertionError
-        
-        self.unit_preference = None # 'C' (Celcius) or 'F' (Farinheight)
+        if os.is_file(device_location, 'r') == False:
+            print('File does not exist!')
+            return -255
+        self.dev_file = device_location
         self.current_temp = None
         self.cieling_temp = None
         self.floor_temp = None
 
+    def setTempC(self):
+        self.unit_preference = 'C'
+
+    def setTempF(self):
+        self.unit_preference = 'F'
+
+    def printTempPref(self):
+        print("Unit Set:" + self.unit_preference +"º")
+    
     # Convert HEX to decimal
     # Accounts for negative value (2s completment)
     # * Assuming leading 2 HEX values are 'FF'
@@ -49,6 +56,21 @@ class OneThermometer:
         # return (int)
         return dec
 
+    def setTempHigh(self, high):
+        if self.floor_temp > high:
+            print("Temp is lower than 'High' setting!")
+            print("'High Temp'not set")
+            return -255
+        print("'High' Temp set to:" + high)
+        self.cieling_temp = high
+
+    def setTempLow(self, low):
+        if self.cieling_temp < low:
+            print("Temp is higher than 'High' temp setting!")
+            print("'Low' Temp not set")
+            return -255
+        print("'Low' Temp set to:" + low)
+        self.floor_temp = low
 
     # Read the RAW t=##### number
     # Include the '-' if value is negative. Ex: -#####
@@ -62,8 +84,8 @@ class OneThermometer:
         temp = ''
 
         # Read file
-        if os.is_file(self.dev_file)
-            __temp_file = open(self.device_location, 'r')
+        if os.is_file(self.dev_file):
+            temp_file = open(self.device_location, 'r')
         # Handle file if it doesn't exist
         except FileDoesNotExist():
             print("File does not exist!")
@@ -89,4 +111,5 @@ class OneThermometer:
         
         # return (float)
         return temp
+
 
