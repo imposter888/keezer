@@ -2,18 +2,18 @@
 
 from re import findall
 from os import system
-from os import popen
-
+from os import path
 class OneThermometer:
 
     dev_file = '/sys/bus/w1/devices/'
     unit_preference = 'C' # 'C' (Celcius, default) or 'F' (Farinheight)
 
     def __init__ (self, device_location):
-        if os.is_file(device_location, 'r') == False:
+        if path.isfile(device_location) == False:
             print('File does not exist!')
-            return -255
-        self.dev_file = device_location
+            print('Setting default to:', self.dev_file)
+        else:
+            self.dev_file = device_location
         self.current_temp = None
         self.cieling_temp = None
         self.floor_temp = None
@@ -72,6 +72,22 @@ class OneThermometer:
         print("'Low' Temp set to:" + low)
         self.floor_temp = low
 
+    def setDeviceLocation(self, device_location):
+       # Read file
+        try:
+            if os.is_file(self.dev_file):
+                temp_file = open(self.device_location, 'r')
+            else:
+                print("Not a file! Returning")
+                return True
+        # Handle file if it doesn't exist
+        except OSError:
+            print("File does not exist!")
+            return False
+
+        temp_file.close()
+        return True
+    
     # Read the RAW t=##### number
     # Include the '-' if value is negative. Ex: -#####
     # Variables:
@@ -83,17 +99,7 @@ class OneThermometer:
         match = ''
         temp = ''
 
-        # Read file
-        try:
-            if os.is_file(self.dev_file):
-                temp_file = open(self.device_location, 'r')
-            else:
-                print("Not a file! Returning")
-                return -253
-        # Handle file if it doesn't exist
-        except OSError:
-            print("File does not exist!")
-            return -255
+        if 
             
         # Take input of first line of w1_slave file
         # Look for 'YES' if both lines match, or 'NO' if they don't
