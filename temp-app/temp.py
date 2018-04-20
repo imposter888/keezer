@@ -6,7 +6,7 @@ from os import popen
 
 class OneThermometer:
 
-    self.dev_file = '/sys/bus/w1/devices/'
+    dev_file = '/sys/bus/w1/devices/'
     unit_preference = 'C' # 'C' (Celcius, default) or 'F' (Farinheight)
 
     def __init__ (self, device_location):
@@ -77,17 +77,21 @@ class OneThermometer:
     # Variables:
     #   - self (object): of OneThermometer
     #   - forc (string): Specifies return of Farinheight ("F) or Celcius ("C")
-    def readRAW (self, forc):
+    def readTemp (self):
         temp_file = ''
         hex_line = ''
         match = ''
         temp = ''
 
         # Read file
-        if os.is_file(self.dev_file):
-            temp_file = open(self.device_location, 'r')
+        try:
+            if os.is_file(self.dev_file):
+                temp_file = open(self.device_location, 'r')
+            else:
+                print("Not a file! Returning")
+                return -253
         # Handle file if it doesn't exist
-        except FileDoesNotExist():
+        except OSError:
             print("File does not exist!")
             return -255
             
@@ -106,7 +110,7 @@ class OneThermometer:
         temp = hexToDec(hex_line) / 1000
         
         # FUTURE RELEASE!!! Utilize the self.unit_preference (object, string)
-        if forc.upper() == 'F':
+        if self.unit_preference == 'F':
             temp = (temp * 1.8) + 32
         
         # return (float)
