@@ -3,8 +3,11 @@
 from re import findall
 from os import system
 from os import path
+
 class OneThermometer:
 
+    cieling_temp = 125
+    floor_temp = -55
     dev_file = '/sys/bus/w1/devices/'
     unit_preference = 'C' # 'C' (Celcius, default) or 'F' (Farinheight)
 
@@ -19,10 +22,16 @@ class OneThermometer:
         self.floor_temp = None
 
     def setTempC(self):
+        if self.unit_preference == 'F':
+            self.cieling_temp = (self.cieling_temp - 32) * (5/9)
+            self.floor_temp = (self.floor_temp - 32) * (5/9)
         self.unit_preference = 'C'
         return
 
     def setTempF(self):
+        if self.unit_preference == 'C':
+            self.cieling_temp = (self.cieling_temp * 9/5) + 32
+            self.floor_temp = (self.floor_temp * 9/5) + 32
         self.unit_preference = 'F'
         return
 
@@ -136,4 +145,6 @@ class OneThermometer:
         self.current_temp = temp
         return temp
 
-
+if __name__ = "__main__":
+    app = OneThermometer()
+    app.run()
