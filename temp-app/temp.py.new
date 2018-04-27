@@ -17,13 +17,6 @@ class OneThermometer:
             print('Setting default to:', self.dev_file)
         else:
             self.dev_file = device_location
-        
-        if os.is_file(device_location) == False
-            print('Device file not found!')
-            raise AssertionError
-        else:
-            self.dev_file = device_location
-        self.unit_preference = None # 'C' (Celcius) or 'F' (Farinheight)
         self.current_temp = None
         self.cieling_temp = None
         self.floor_temp = None
