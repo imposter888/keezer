@@ -18,11 +18,14 @@ class OneThermometer:
         else:
             self.dev_file = device_location
         
-        if os.is_file(device_location) == False
+        # Commenting out. Kicks out program (repeating same check as above)
+        """
+        if path.isfile(device_location) == False:
             print('Device file not found!')
-            raise AssertionError
+            # raise AssertionError
         else:
             self.dev_file = device_location
+        """
         self.unit_preference = None # 'C' (Celcius) or 'F' (Farinheight)
         self.current_temp = None
         self.cieling_temp = None
@@ -101,7 +104,9 @@ class OneThermometer:
     def setDeviceLocation(self, device_location):
        # Read file
         try:
+            print("Device Location target:", device_location)
             if path.isfile(device_location):
+                print("File Found!")
                 temp_file = open(device_location, 'r')
             else:
                 print("Not a file! Returning")
@@ -152,6 +157,12 @@ class OneThermometer:
         self.current_temp = temp
         return temp
 
-if __name__ = "__main__":
-    app = OneThermometer()
-    app.run()
+if __name__ == "__main__":
+    app = OneThermometer('/sys/bus/w1/devices/28-/w1_slave')
+    print('attempting to set Device Location...')
+    app.setDeviceLocation('/sys/bus/w1/devices/28-01161b0873ee/w1_slave')
+    print(app.readTemp())
+    print(app.setTempF())
+    print(app.readTemp())
+    
+
