@@ -6,8 +6,6 @@ from os import path
 
 class OneThermometer:
 
-    cieling_temp = 125
-    floor_temp = -55
     dev_file = '/sys/bus/w1/devices/'
     unit_preference = 'C' # 'C' (Celcius, default) or 'F' (Farinheight)
 
@@ -17,19 +15,11 @@ class OneThermometer:
             print('Setting default to:', self.dev_file)
         else:
             self.dev_file = device_location
-        
-        # Commenting out. Kicks out program (repeating same check as above)
-        """
-        if path.isfile(device_location) == False:
-            print('Device file not found!')
-            # raise AssertionError
-        else:
-            self.dev_file = device_location
-        """
-        self.unit_preference = None # 'C' (Celcius) or 'F' (Farinheight)
+
+        self.unit_preference = 'C' # 'C' (Celcius) or 'F' (Farinheight)
         self.current_temp = None
-        self.cieling_temp = None
-        self.floor_temp = None
+        self.cieling_temp = 125
+        self.floor_temp = -55 
 
     def setTempC(self):
         if self.unit_preference == 'F':
@@ -46,60 +36,75 @@ class OneThermometer:
         return
 
     def printTempPref(self):
-        print("Unit Set:" + self.unit_preference +"º")
+        print("Unit Set: " + self.unit_preference +"º")
         return
 
-    # Convert HEX to decimal
-    # Accounts for negative value (2s completment)
+    def printTempHigh(self):
+        print("Cieling Temp: " + str(self.cieling_temp) + str(self.unit_preference))
+
+    def printTemp(self):
+        print("Floor Temp: " + str(self.floor_temp) + str(self.unit_preference))
+
+    # Function: Input HEX (string) and return decimal (float)
+    #
+    # Accounts for negative value in binary (2s completment)
     # * Assuming leading 2 HEX values are 'FF'
+    # Input:
+    #   * hex_temp (string): contains 4 string HEX
     # Variables:
     #   - hex_temp (string): holds value for incoming hex
-    #   - bit (string): holds value for binary
-    #   - temp
+    #   - bit (string): binary string iterable
+    #   - temp (string): contains binary string for 2s compliment conversion
+    #
     def hexToDec(self, hex_temp):
         dec = 0
         temp = 0
         # Convert negative value if leading byte is 'FF'
         if hex_temp[:2] == 'FF':
             hex_temp = bin(int(hex_temp, 16))[2:]
-            # Flip bits
             for bit in hex_temp:
                 if bit == '1':
                     temp += '0'
                 elif bit == '0':
                     temp += '1'
-            temp = bin(int(temp, 2))[:2]
-            # Add 1 to binary string, convert to dec, make negative (int)
+            temp = bin(int(temp, 2))[2:]
             dec = -int(bin(int(temp,2) + int('1',2))[2:], 2)
         else:
-            # Positive temp from hex to dec (int)
             dec = int(hex_temp, 16)
         # return (int)
         return dec * 62.5
 
+    # Function: Set cieling temperature
+    #
+    # Input:
+    #   * high (int): contains cieling temp
+    #
     def setTempHigh(self, high):
-        if self.cieling_temp == None:
+        if self.unit_preference == 'C' && high <= 125
+            && self.floor_temp <= high:
             self.cieling_temp = high
-            return
-        elif self.floor_temp > high:
-            print("Temp is lower than 'High' setting!")
-            print("'High Temp'not set")
-            return -255
-        print("'High' Temp set to:" + str(high))
-        self.cieling_temp = high
-        return
+        elif self.unit_preference == 'F' && high <= 260
+            && self.floor_temp <= high:
+            self.cieling_temp = high
+        elif:
+            print("'High' temp not set!")
+            return False
+        print("'High' temp set to: " + str(self.cieling_temp) + "º")
+        return True
 
     def setTempLow(self, low):
-        if self.floor_temp == None:
+        if self.unit_preference == 'C' && low >= -55
+            && self.cieling_temp >= low:
             self.floor_temp = low
-            return
-        elif self.cieling_temp < low:
-            print("Temp is higher than 'High' temp setting!")
-            print("'Low' Temp not set")
-            return -255
-        print("'Low' Temp set to:" + str(low))
-        self.floor_temp = low
-        return
+        elif self.unit_preference == 'F' && low >= -64
+            && self.cieling_temp >= low:
+            self.floor_temp = low
+        else:
+            print("'Low' temp not set!")
+            return False
+
+        print("'Low' temp set to: " + str(self.floor_temp) + "º")
+        return True
 
     def setDeviceLocation(self, device_location):
        # Read file
