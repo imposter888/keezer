@@ -19,7 +19,7 @@ class OneThermometer:
         self.unit_preference = 'C' # 'C' (Celcius) or 'F' (Farinheight)
         self.current_temp = None
         self.cieling_temp = 125
-        self.floor_temp = -55 
+        self.floor_temp = -55
 
     def setTempC(self):
         if self.unit_preference == 'F':
@@ -40,10 +40,10 @@ class OneThermometer:
         return
 
     def printTempHigh(self):
-        print("Cieling Temp: " + str(self.cieling_temp) + str(self.unit_preference))
+        print("Cieling Temp: " + str(self.cieling_temp) + str(self.unit_preference) + "º")
 
     def printTemp(self):
-        print("Floor Temp: " + str(self.floor_temp) + str(self.unit_preference))
+        print("Floor Temp: " + str(self.floor_temp) + str(self.unit_preference) + "º")
 
     # Function: Input HEX (string) and return decimal (float)
     #
@@ -58,9 +58,9 @@ class OneThermometer:
     #
     def hexToDec(self, hex_temp):
         dec = 0
-        temp = 0
+        temp = ''
         # Convert negative value if leading byte is 'FF'
-        if hex_temp[:2] == 'FF':
+        if hex_temp[:1] == 'F':
             hex_temp = bin(int(hex_temp, 16))[2:]
             for bit in hex_temp:
                 if bit == '1':
@@ -71,7 +71,7 @@ class OneThermometer:
             dec = -int(bin(int(temp,2) + int('1',2))[2:], 2)
         else:
             dec = int(hex_temp, 16)
-        # return (int)
+        # return (float)
         return dec * 62.5
 
     # Function: Set cieling temperature
@@ -169,5 +169,3 @@ if __name__ == "__main__":
     print(app.readTemp())
     print(app.setTempF())
     print(app.readTemp())
-    
-
