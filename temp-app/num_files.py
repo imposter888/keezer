@@ -16,7 +16,10 @@ def findFile(x):
         '8' : '8.txt',
         '9' : '9.txt',
         '.' : 'dot.txt',
-        '-' : 'minus.txt'
+        '-' : 'minus.txt',
+        'º' : 'degree.txt',
+        'F' : 'F.txt',
+        'C' : 'C.txt'
     }
     return filename[x]
 
