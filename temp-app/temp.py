@@ -80,24 +80,20 @@ class OneThermometer:
     #   * high (int): contains cieling temp
     #
     def setTempHigh(self, high):
-        if self.unit_preference == 'C' && high <= 125
-            && self.floor_temp <= high:
+        if self.unit_preference == 'C' and high <= 125 and self.floor_temp <= high:
             self.cieling_temp = high
-        elif self.unit_preference == 'F' && high <= 260
-            && self.floor_temp <= high:
+        elif self.unit_preference == 'F' and high <= 260 and self.floor_temp <= high:
             self.cieling_temp = high
-        elif:
+        else:
             print("'High' temp not set!")
             return False
         print("'High' temp set to: " + str(self.cieling_temp) + "º")
         return True
 
     def setTempLow(self, low):
-        if self.unit_preference == 'C' && low >= -55
-            && self.cieling_temp >= low:
+        if self.unit_preference == 'C' and low >= -55 and self.cieling_temp >= low:
             self.floor_temp = low
-        elif self.unit_preference == 'F' && low >= -64
-            && self.cieling_temp >= low:
+        elif self.unit_preference == 'F' and low >= -64 and self.cieling_temp >= low:
             self.floor_temp = low
         else:
             print("'Low' temp not set!")
