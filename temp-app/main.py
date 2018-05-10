@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import num_files
-import os
+import os, sys, select, time
 import temp
 from re import findall
 
@@ -34,6 +34,8 @@ def displayText(text):
         for num in files:
             line += num.readline()[:-2] + ' '
         print(line)
+    for i in range(int((row - t_row)/2)):
+        os.system('echo')
     return
 
 def logTemp(temp, pref):
@@ -55,13 +57,16 @@ def main():
     therm = temp.OneThermometer(filename)
     therm.setTempF()
     os.system('sleep 2')
-    while(key == ''):
-        temp = str('%.2f' % therm.readTemp())
-        displayText(temp)
-        logTemp(temp, therm.unit_preference)
+    while True:
+        temp_reading = str('%.2f' % therm.readTemp())
+        displayText(temp_reading+'º'+therm.unit_preference)
+        logTemp(temp_reading, therm.unit_preference)
         os.system('sleep 5')
-    # Code goes here
+        i,o,e = select.select([sys.stdin],[],[],0.0001)
+        if i == [sys.stdin]:
+            break
 
+    print("Goodbye :)")
 
 if __name__ == "__main__":
     main()
