@@ -9,7 +9,7 @@ def welcomeMessage():
     w_row, w_col = 8, 75
     line = ''
     os.system('clear')
-    for i in range(int(row/2)-int(w_row/2)):
+    for i in range(int((row - w_row)/2)):
         os.system('echo')
     welcome = open('./fonts/welcome.txt', 'r')
     for i in range(w_row):
@@ -17,6 +17,8 @@ def welcomeMessage():
         line += (' ' * (int(col/2) - int(w_col/2))) + welcome.readline()[:-2]
         print(line)
     welcome.close()
+    for i in range(int((row - w_row)/2)):
+        os.system('echo')
     return
 
 def displayText(text):
@@ -51,6 +53,7 @@ def shellSize():
 
 def main():
     key = ''
+    temp_previous = '0'
     filename = '/sys/bus/w1/devices/28-01161b0873ee/w1_slave'
     shell_row, shell_col = shellSize()
     welcomeMessage()
@@ -59,9 +62,12 @@ def main():
     os.system('sleep 2')
     while True:
         temp_reading = str('%.2f' % therm.readTemp())
-        displayText(temp_reading+'º'+therm.unit_preference)
-        logTemp(temp_reading, therm.unit_preference)
-        os.system('sleep 5')
+        if (int(os.popen('date +%s').read()[:-1]) % 300) == 0 or temp_previous != temp_reading:
+            logTemp(temp_reading, therm.unit_preference)
+        if temp_previous != temp_reading:
+            temp_previous = temp_reading
+            displayText(temp_reading+'º'+therm.unit_preference)
+        os.system('sleep 1')
         i,o,e = select.select([sys.stdin],[],[],0.0001)
         if i == [sys.stdin]:
             break
